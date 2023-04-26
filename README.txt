@@ -1,0 +1,146 @@
+Homework 7
+Kody Yuen and Sena Szczepaniuk
+
+**Changes at the bottom**
+
+The interface ImageState represents the state of the image object. It has methods that return information
+about the state of the object, such as its dimensions and its pixel at a specific coordinate.
+
+The class Image implements ImageState and it is how I am representing my image object. It takes in an
+arraylist of arraylist of pixels in its constructor and creates the image object. I used an arraylist so
+the image's size can be dynamic.
+
+The interface IPixel represents the state of the pixel. It has methods that return information about a
+pixel (red, green, and blue values).
+
+The class Pixel implements IPixel and it is what makes up an image object. Its constructor takes in three
+integers representing RGB values that range from 0-255.
+
+The interface ImageFile represents how my application would read and write files to images and images to files.
+I made an interface for importing and exporting files because my thinking was if I needed to support more file
+types, I would be able to create different file type classes where each would implement their own way to convert
+their specific file type from file to object and object to file.
+
+The class PPMImage implements ImageFile and represents how a file would be read into the application, converted
+into an image object, and how an image object would be broken down and converted to a valid PPM format for a file.
+
+The interface CreateImage represents classes that would be called with its create() method to create 
+pre-determined programmatic images. If I needed to create other pre-determined images, I would add a new class
+that implements this interface and house the logic in there. Then, to create the image, you would just need to
+call create() on an instance of that class and it will return that image.
+
+The class CreateCheckerboard implements CreateImage and creates a checkerboard image with preset colors,
+but the user must enter the tile size and number of tiles. I decided to have preset colors as the user
+would need to enter two Pixels with its RGB values which may be confusing.
+
+The interface Feature represents objects that can be used to alter an image object. It has the filter and
+transformation classes implementing it because I realized that when doing either a filter or transformation,
+I had to pass in a pixel to do either the same way every time. So, in my model, I can call a method with a
+feature object so that it can use dynamic dispatch to correctly apply it.
+
+The abstract class AbstractFilter implements Feature and houses the logic behind filtering. Since filtering
+only changes depending on the kernel, this class takes the kernel of the filter object and applies it to the
+given image's pixels. The classes Blur and Sharpen only hold its respective kernels.
+
+The abstract class AbstractTransformation implements Feature and similarly houses the logic behind transformations.
+It will take the matrix of the transformation object and apply it to the given image's pixels. The classes
+Greyscale and Sepia only hold its respective matrices.
+
+I decided not to have Filter or Transformation interfaces extending Feature or at all as I did not have any methods
+in them and the abstract classes essentially act as the unifying class.
+
+The interface IModel holds the operations that the model can perform as well as information about the state of the model.
+
+The class ImageModel implements IModel and represents the model for this application. It has two fields which hold
+the original image given and a new image where it is mutated depending on what features are applied to it. It can
+return both the original image and the new image. When applying features, it calls on the abstract filter and transformation
+classes. I decided to do this as it seemed repetitive to have multiple methods that do the same thing (send pixel to another method).
+An alternative I had in mind was moving the logic of filtering and transforming into the model (I would have called them applyFilter
+and applyTransformation) and call another helper that sends each pixel of the image into it. But, I could not think of a good way to
+abstract dealing with looping through the pixels so I kept it the way it is.
+
+Sources:
+Wolverine - https://pinshape.com/items/45652-3d-printed-chubby-wolverine-low-res
+animal - https://commons.wikimedia.org/wiki/File:Nutria_population_in_Weilerswist,_Germany_low_res.ogv
+
+HOMEWORK 6 CHANGES --------------------------------------------------------------------------------------------
+
+Changes:
+-ImageFile was removed and its logic was implemented in the command class
+
+-The original ImageModel depended on outside classes for some of its logic. Specifically,
+it deferred filtering and transforming to the abstract filter and transformation classes.
+The logic there was moved into the ImageModel so it was not coupled to it.
+
+-ImageModel had a constructor and method added. The new constructor takes in no arguments
+and its purpose is so that a new instance of it wouldn't need to be created every time
+an image needed to be processed from a layer. Instead, a protected method called loadImage()
+was created which the LayerModel used to load whatever image needed to be processed.
+
+-The Feature interface was removed and the IFilter and ITransformation interfaces were added.
+These were for organizing the filters/transformations and providing a way to provide the 
+kernel/matrix to the ImageModel so that the logic could be done.
+
+New:
+
+-ILayer and Layer. We represented a layer as having a name, image, and boolean flag to indicate
+whether it was visible or not. ILayer provided the methods to access these fields.
+
+-EmptyImage. We needed a way to represent an empty image in a layer before an image was loaded in.
+We did this by having an EmptyImage class where its methods return null and the LayerModel
+can deal with its limitations accordingly.
+
+-LayerModel and ILayerModel. Our LayerModel was where we held our multi-layer image, represented as a list
+of ILayers. We had methods to add a layer, add an image to a layer, apply a feature to a layer,
+and set the visibilty status of a layer. We also held the current layer in the LayerModel.
+The LayerModel extended the ImageModel so it can represent and hold information about the multi-layer image
+while also being able to reuse the ImageModel's functionality of processing images.
+
+-LayerController and ILayerController: Our controller used a command pattern to manage the
+application. The controller rendered a message to the console if there were any errors.
+In the beginning, the user could pick either inputting to the console or inputting a script.
+If the script was chosen, the program would process the script and end. If the console was chosen,
+the user would continuously put commands in and would have to manually exit the program if they were done.
+
+-LayerView: The layerview exists to render error messages to the console from the controller.
+
+
+HOMEWORK 7 CHANGES ---------------------------------------------------------------------------------------------
+
+-Added InteractiveController which only deals with the GUI. This extends ILayerController, so the controller only
+has one interface. I decided not to create a new interface because I did not feel like it was necessary. The only
+method in the interface is renderMessage() and I used it to render error messages in a section in the GUI.
+InteractiveController interacts with the view only when it sends an error message, it takes in arguments such as
+layer name, arguments for checkerboard, saving and loading files, updating the topmost image, and setting the 
+view's listeners. The view has no knowledge of the model or controller.
+
+-Added CommandListener class which extends ActionListener. This is where I mapped the action commands of the GUI
+to the runnable commands that I created in the controller. In the controller, I added the map of the commands to
+the CommandListener and assigned the CommandListener as a listener in the view.
+
+-Added ILayerInteractiveView and LayerInteractiveView. All methods in the interface are things that the controller
+needs to access arguments given in the GUI, such as getting the arguments in the text box or getting the files
+that the user is trying to load/save. I could not think of another way that the controller would access these
+arguments, so I had to create an interface for this view and create those public methods that the controller can use.
+
+-Adjusted LayerController (controller that supports scripting and inputs from the console). I had to change the
+start method so that it defaults to text mode. Since the main method ensures that only either script or text is entered,
+the fallthrough will always default to text.
+
+-Moved some methods from the command classes to a Utils class. The methods that I moved were converting from an
+image object to a buffered image and converting from a buffered image to an image object. I had to do this as the
+method was originally private in my save command class, but to display images in the GUI, I had to convert it to
+a buffered image. Instead of repeating code, I made those methods static and used it in the GUI.
+
+-Save command. To make the save command more general and not rely on hard-coded paths, I changed the arguments
+required to save an image. Before, I kind of misinterpreted the assignment and some posts on Piazza so I had the
+user type in a file path with the extension (example.jpg) and the file extension to confirm (jpg). If they did not
+match, I threw an error. Now, instead of checking for that, I just have them type in the file name (example) and the
+extension they want (jpg) so it will save as example.jpg. This also allows me to be more flexible when saving and
+loading images in the GUI.
+
+-Extra Credit: To implement the extra credit, we created a new interface IComplexLayerModel. This extended IModel.
+The new interface only held the method to downscale. So, I had LayerModel implement IComplexLayerModel. This means
+that whenever a client would need the basic model, they can use ILayerModel. But when they need the model with
+the ability to downscale, they would use IComplexLayerModel. I added the method directly into the LayerModel.
+The hierarchy is IModel <- IComplexLayerModel <- LayerModel. The image used for downscaling is my own.

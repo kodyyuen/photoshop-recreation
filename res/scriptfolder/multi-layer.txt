@@ -1,0 +1,7 @@
+create 1
+current 1
+load scriptfolder/layer-1.jpg
+create 2
+current 2
+load scriptfolder/layer-2.jpg
+multisave newscriptfolder png
