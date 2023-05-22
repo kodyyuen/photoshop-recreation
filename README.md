@@ -1,33 +1,35 @@
+
 # Photoshop Recreation
 
 This project was an attempt at a recreation of photoshop. The program included some of photoshop's features such as applying filters (blurring and sharpening) and transformations (greyscale and sepia) to images, downscaling images, and saving and loading images. Similar to photoshop, users were also able to manipulate layers of images. They were able to make any layer visible/invisible and apply any of the previous features to it. If the second layer was greyscaled and the first layer was made invisible, the GUI would display the greyscaled layer. The program also supports the option to save and load images in ppm, jpg, and png. It is also able to hold the state of the image, so if the image described before was saved, it would be able to load the image back with the first layer invisible and the second layer greyscaled and the user would be able to pick up where they left off.
 
+## Getting Started
 In the terminal, cd into res and type "java -jar Homework7.jar " followed by
 -script "filepath"
 -text
 -interactive
 
-where script requires the filepath of the text file if you want to script
-text will open up the console for you to type your commands. How to use that is found right below this.
-interactive will open up the GUI. How to use that is found at the bottom.
+- where script requires the filepath of the text file if you want to script
+- text will open up the console for you to type your commands. How to use that is found right below this.
+- interactive will open up the GUI. How to use that is found at the bottom.
 
 Example:
 console
 script script.txt
 
-CREATE layer
+### CREATE layer
 Creates a layer with a specified name. The layer is visible by default.
 
 Example:
 create first
 
-CURRENT layer
+### CURRENT layer
 Sets the given layer name to the current layer.
 
 Example:
 current first
 
-COPY layername newlayername
+### COPY layername newlayername
 Copies the given layer's name to a new layer. The first argument is the layer's name to be copied.
 The second argument is the new layer's name that will be a copy.
 
@@ -35,14 +37,14 @@ Example:
 create first
 copy first second
 
-REMOVE layername
+### REMOVE layername
 Removes the layer that matches the inputted name.
 
 Example:
 create first
 remove first
 
-LOAD filepath
+### LOAD filepath
 Loads the given filepath into the current layer. A current layer needs to be selected
 or the console will prompt you with an error. An error will also be thrown if the file
 path is invalid. You can replace the loaded image in the current layer by calling load 
@@ -51,7 +53,7 @@ again. The filepath is also just the file name (no need for res/filepath).
 Example:
 load image.jpg
 
-CHECKERBOARD tilesize numtiles
+### CHECKERBOARD tilesize numtiles
 This is another way to load an image into a layer. This loads a programmatically created
 image into the current layer. It requires the size of the tile and the number of tiles
 on one side as numbers. A layer must exist and be set as current for the image to load into it.
@@ -60,7 +62,7 @@ Example:
 checkerboard 50 5       will create a checkerboard image with tiles 50 pixels wide and
                         the board will be 5 tiles wide
 						
-SAVE filepath filetype
+### SAVE filepath filetype
 Saves the topmost visible layer to the filepath given. The current layer also must have
 an image loaded into it.
 
@@ -69,7 +71,7 @@ save example jpg
 save example ppm
 save example png
 
-BLUR, SHARPEN, GREYSCALE, SEPIA
+### BLUR, SHARPEN, GREYSCALE, SEPIA
 All of these commands are typed on a new line. It applies the feature to the current
 layer. If no layer is current, it will throw an error. The layer must also have an image
 loaded into it.
@@ -79,7 +81,7 @@ create first
 current first
 blur #blurs the layer "first"
 
-VISIBLE/INVISIBLE layer
+### VISIBLE/INVISIBLE layer
 These commands are called to make the given layer either invisible or visible. The layer
 name must exist for this command to work.
 
@@ -89,7 +91,7 @@ create second
 current second
 invisible first
 
-MULTISAVE filepath filetype
+### MULTISAVE filepath filetype
 Calling multisave with a filetype (png, jpg, ppm) will save all current layers' images
 individually with the specified filetype (they will be called layer-(number of layer).filetype)
 as well as a text file containing the script to load them back in (called multi-layer.txt). They will
@@ -105,7 +107,7 @@ current first
 load koala.ppm ppm
 multisave jpg
 
-MULTILOAD filepath
+### MULTILOAD filepath
 Calling multiload with the filepath will load all of the layers and their previous
 visibility statuses all at once. The expected filepath is to a text file.
 
@@ -114,7 +116,7 @@ multiload multi-layer.txt
 
 
 
-GUI OPERATIONS ------------------------------------------------------------------------------------------------
+## GUI OPERATIONS 
 
 The menu at the top displays all of the available operations.
 
