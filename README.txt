@@ -1,4 +1,6 @@
-Homework 7 USEME
+#Photoshop Recreation
+
+This project was an attempt at a recreation of photoshop. The program included some of photoshop's features such as applying filters (blurring and sharpening) and transformations (greyscale and sepia) to images, downscaling images, and saving and loading images. Similar to photoshop, users were also able to manipulate layers of images. They were able to make any layer visible/invisible and apply any of the previous features to it. If the second layer was greyscaled and the first layer was made invisible, the GUI would display the greyscaled layer. The program also supports the option to save and load images in ppm, jpg, and png. It is also able to hold the state of the image, so if the image described before was saved, it would be able to load the image back with the first layer invisible and the second layer greyscaled and the user would be able to pick up where they left off.
 
 In the terminal, cd into res and type "java -jar Homework7.jar " followed by
 -script "filepath"
